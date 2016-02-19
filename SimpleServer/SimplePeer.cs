@@ -42,6 +42,15 @@ namespace SimpleServer
             {
                 Log.DebugFormat("OnOperationRequest: conId={0}, operationCode={1}, parameters={2}", this.ConnectionId, operationRequest.OperationCode, operationRequest.Parameters);
             }
+
+            // simple login action
+            if (operationRequest.OperationCode == SubCode.GLOBAL_ACTION_LOGIN) {
+                OperationResponse operationResponse = new OperationResponse();
+                operationResponse.OperationCode = operationRequest.OperationCode;
+                operationResponse.Parameters = new System.Collections.Generic.Dictionary<byte, object>();
+                operationResponse.Parameters.Add(LoginResponseData.LOGIN_DATA_SUCCESS, "Login Success");
+                SendOperationResponse(operationResponse, new SendParameters());
+            }
         }
     }
 }
