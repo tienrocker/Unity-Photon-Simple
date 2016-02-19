@@ -93,6 +93,7 @@ public class NetworkController : MonoBehaviour, IPhotonPeerListener
 
     public void DebugReturn(DebugLevel level, string message)
     {
+        Client.Instance.DebugText.text += String.Format("[{0}] {1} \n", level.ToString(), message);
         switch (level)
         {
             case DebugLevel.INFO:
@@ -119,7 +120,19 @@ public class NetworkController : MonoBehaviour, IPhotonPeerListener
 
     public void OnOperationResponse(OperationResponse operationResponse)
     {
+
         DebugReturn(DebugLevel.INFO, String.Format("OnOperationResponse: {0}", operationResponse.ToStringFull()));
+
+        switch (operationResponse.OperationCode)
+        {
+            case SubCode.GLOBAL_ACTION_LOGIN:
+
+                DebugReturn(DebugLevel.INFO, String.Format("OnOperationResponse: {0}", operationResponse.ToStringFull()));
+                break;
+            default:
+                break;
+        }
+
     }
 
     public void OnStatusChanged(StatusCode statusCode)

@@ -14,7 +14,7 @@ namespace SimpleServer
     using Photon.SocketServer;
 
     using PhotonHostRuntimeInterfaces;
-
+    using System.Collections.Generic;
     public class SimplePeer : PeerBase
     {
         private readonly ILogger Log;
@@ -44,12 +44,18 @@ namespace SimpleServer
             }
 
             // simple login action
-            if (operationRequest.OperationCode == SubCode.GLOBAL_ACTION_LOGIN) {
+            if (operationRequest.OperationCode == SubCode.GLOBAL_ACTION_LOGIN)
+            {
                 OperationResponse operationResponse = new OperationResponse();
                 operationResponse.OperationCode = operationRequest.OperationCode;
                 operationResponse.Parameters = new System.Collections.Generic.Dictionary<byte, object>();
                 operationResponse.Parameters.Add(LoginResponseData.LOGIN_DATA_SUCCESS, "Login Success");
                 SendOperationResponse(operationResponse, new SendParameters());
+
+                Dictionary<byte, object> parameters = new Dictionary<byte, object>();
+                parameters.Add(LoginResponseData.LOGIN_DATA_SUCCESS, string.Format("{0} logged in", operationRequest.Parameters[LoginRequestData.LOGIN_DATA_USERNAME]));
+                EventData eventData = new EventData(LoginResponseData.LOGIN_DATA_SUCCESS, parameters);
+                SendEvent(eventData, new SendParameters());
             }
         }
     }
