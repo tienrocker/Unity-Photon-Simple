@@ -41,9 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementation\Handlers\DefaultMessageHandler.cs" />
-    <Compile Include="Implementation\Handlers\LoginMessageHandler.cs" />
-    <Compile Include="Implementation\Messages\DefaultMessage.cs" />
     <Compile Include="Interfaces\IMessageHandler.cs" />
     <Compile Include="Interfaces\IMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

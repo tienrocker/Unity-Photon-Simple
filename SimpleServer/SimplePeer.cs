@@ -45,7 +45,7 @@
 
             DefaultMessage msg = new DefaultMessage();
             msg.Code = operationRequest.OperationCode;
-            msg.SubCode = sendParameters.s
+            msg.SubCode = operationRequest.Parameters.TryGetValue()
 
             foreach (IMessageHandler handler in handlers)
             {

@@ -82,7 +82,10 @@
     <Compile Include="Data\Request\LoginRequestData.cs" />
     <Compile Include="Data\Response\LoginResponseData.cs" />
     <Compile Include="Data\OperationCode.cs" />
-    <Compile Include="Handlers\Class1.cs" />
+    <Compile Include="Implementation\Handlers\Class1.cs" />
+    <Compile Include="Implementation\Handlers\DefaultMessageHandler.cs" />
+    <Compile Include="Implementation\Handlers\LoginMessageHandler.cs" />
+    <Compile Include="Implementation\Messages\DefaultMessage.cs" />
     <Compile Include="SimplePeer.cs" />
     <Compile Include="SimpleServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,7 +99,12 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleServerCommon\SimpleServerCommon.csproj">
+      <Project>{7dac09fa-77c5-49ec-93f3-d1183f61be7a}</Project>
+      <Name>SimpleServerCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
