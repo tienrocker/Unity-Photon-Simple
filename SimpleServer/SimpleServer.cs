@@ -36,7 +36,7 @@ namespace SimpleServer
             var file = new FileInfo(path);
             if (file.Exists)
             {
-                ExitGames.Logging.LogManager.SetLoggerFactory(Log4NetLoggerFactory.Instance);
+                LogManager.SetLoggerFactory(Log4NetLoggerFactory.Instance);
                 XmlConfigurator.ConfigureAndWatch(file);
             }
 

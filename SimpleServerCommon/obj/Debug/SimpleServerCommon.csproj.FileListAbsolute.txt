@@ -1,0 +1,1 @@
+D:\unity\Photon\photon3\src-server\SimpleServer\SimpleServerCommon\obj\Debug\SimpleServerCommon.csprojResolveAssemblyReference.cache

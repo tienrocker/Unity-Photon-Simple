@@ -85,6 +85,7 @@ public class NetworkController : MonoBehaviour, IPhotonPeerListener
     public void Connect()
     {
         DebugReturn(DebugLevel.INFO, "Connecting...");
+        if (Peer.PeerState == PeerStateValue.Connected) return;
         if (Peer.Connect(ServerEndPoint, String.Format("{0} - {1}", applicationName, applicationVersion)))
         {
             enabled = true;
@@ -120,19 +121,16 @@ public class NetworkController : MonoBehaviour, IPhotonPeerListener
 
     public void OnOperationResponse(OperationResponse operationResponse)
     {
-
         DebugReturn(DebugLevel.INFO, String.Format("OnOperationResponse: {0}", operationResponse.ToStringFull()));
 
         switch (operationResponse.OperationCode)
         {
-            case SubCode.GLOBAL_ACTION_LOGIN:
-
-                DebugReturn(DebugLevel.INFO, String.Format("OnOperationResponse: {0}", operationResponse.ToStringFull()));
+            case OperationCode.GLOBAL_ACTION_LOGIN:
+                DebugReturn(DebugLevel.INFO, String.Format("Login: {0} {1}", operationResponse.Parameters[LoginResponseData.CODE], operationResponse.Parameters[LoginResponseData.MESSAGE]));
                 break;
             default:
                 break;
         }
-
     }
 
     public void OnStatusChanged(StatusCode statusCode)
