@@ -21,6 +21,8 @@ public class Client : MonoBehaviour
     public Button btnLogin;
     public Text txtUsername;
     public Text txtPassword;
+
+    public UserData userData;
     #endregion
 
     void Awake()
@@ -34,11 +36,13 @@ public class Client : MonoBehaviour
     void Start()
     {
         // assign event
-        NetworkController.onConnected += () => {
+        NetworkController.onConnected += () =>
+        {
             if (LoginPanel != null) LoginPanel.SetActive(true);
             if (btnReconnect != null) btnReconnect.gameObject.SetActive(false);
         };
-        NetworkController.onDisconnected += () => {
+        NetworkController.onDisconnected += () =>
+        {
             if (btnReconnect != null) btnReconnect.gameObject.SetActive(true);
         };
 
@@ -51,11 +55,13 @@ public class Client : MonoBehaviour
         NetworkController.Instance.DebugReturn(DebugLevel.INFO, String.Format("Login to system using username \"{0}\" and password \"{1}\"", txtUsername.text, txtPassword.text));
 
         // send login message to server
+        NetworkController.onOperationResponse += (new LoginHandler().onOperationResponse); // assign response processer
+
         Dictionary<byte, object> customOpParameters = new Dictionary<byte, object>();
         customOpParameters.Add(LoginRequestData.LOGIN_DATA_TYPE, LoginRequestData.LoginType.NORMAL);
         customOpParameters.Add(LoginRequestData.LOGIN_DATA_USERNAME, txtUsername.text);
         customOpParameters.Add(LoginRequestData.LOGIN_DATA_PASSWORD, txtPassword.text);
-        NetworkController.Instance.Peer.OpCustom(OperationCode.GLOBAL_ACTION_LOGIN, customOpParameters, true);
+        NetworkController.Instance.Peer.OpCustom(RequestCode.GLOBAL_ACTION_LOGIN, customOpParameters, true);
     }
 
     public void ReconnectClick()

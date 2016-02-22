@@ -1,22 +1,22 @@
 ﻿namespace SimpleServer
 {
     using ExitGames.Logging;
-
     using Photon.SocketServer;
-
     using PhotonHostRuntimeInterfaces;
-    using SimpleServerCommon;
     using System;
     using System.Collections.Generic;
-    public class SimplePeer : PeerBase
+
+    public class SimplePeer : PeerBase, IClientPeer
     {
         public static List<SimplePeer> PeerLists = new List<SimplePeer>();
         public Guid PeerId { get; set; }
+        public bool IsProxy { get { return false; } set { /* do nothing */ } }
         private readonly ILogger Log;
         private IPhotonPeer photonPeer;
         private IRpcProtocol protocol;
 
-        private List<IMessageHandler> handlers = new List<IMessageHandler>();
+        private List<IHandler<IClientPeer>> handlers = new List<IHandler<IClientPeer>>();
+        private readonly IHandlerList<IClientPeer> handlerList;
 
         public SimplePeer(IRpcProtocol protocol, IPhotonPeer photonPeer, ILogger log) : base(protocol, photonPeer)
         {
@@ -26,8 +26,10 @@
             PeerId = Guid.NewGuid();
             PeerLists.Add(this);
 
-            handlers.Add(new DefaultMessageHandler());
-            handlers.Add(new LoginMessageHandler());
+            // add handler
+            handlers.Add(new LoginRequestHandler());
+            handlers.Add(new RegisterRequestHandler());
+            handlerList = new ClientHandlerList(handlers);
         }
 
         protected override void OnDisconnect(DisconnectReason reasonCode, string reasonDetail)
@@ -43,35 +45,25 @@
                 Log.DebugFormat("OnOperationRequest: conId={0}, operationCode={1}, parameters={2}", this.ConnectionId, operationRequest.OperationCode, operationRequest.Parameters);
             }
 
-            DefaultMessage msg = new DefaultMessage();
-            msg.Code = operationRequest.OperationCode;
-            msg.SubCode = operationRequest.Parameters.TryGetValue()
+            handlerList.HandlerMessage(new RequestMessage(operationRequest.OperationCode, operationRequest.Parameters), this);
+        }
+        
+        T IClientPeer.ClientData<T>()
+        {
+            throw new NotImplementedException();
+        }
 
-            foreach (IMessageHandler handler in handlers)
+        public void SendMessage(IMessage message)
+        {
+            if (message is EventMessage)
             {
-                if (handler.HandlerMessage(msg))
-                {
-                    break;
-                }
+                SendEvent(new EventData(message.Code) { Parameters = message.Parameters }, new SendParameters());
             }
 
-            // simple login action
-            if (operationRequest.OperationCode == OperationCode.GLOBAL_ACTION_LOGIN)
+            var response = message as ResponseMessage;
+            if (response != null)
             {
-                string username = operationRequest.Parameters[LoginRequestData.LOGIN_DATA_USERNAME].ToString();
-                string password = operationRequest.Parameters[LoginRequestData.LOGIN_DATA_PASSWORD].ToString();
-
-                OperationResponse operationResponse = new OperationResponse();
-                operationResponse.OperationCode = operationRequest.OperationCode;
-                operationResponse.Parameters = new Dictionary<byte, object>();
-                operationResponse.Parameters.Add(LoginResponseData.CODE, LoginResponseCode.SUCCESS);
-                operationResponse.Parameters.Add(LoginResponseData.MESSAGE, LoginResponseMessage.SUCCESS);
-                SendMessage(operationResponse);
-
-                Dictionary<byte, object> parameters = new Dictionary<byte, object>();
-                parameters.Add(EventType.MESSAGE, string.Format("{0}: {1} logged in", PeerId, username));
-                EventData eventData = new EventData(EventType.MESSAGE, parameters);
-                SendOtherMessage(eventData);
+                SendOperationResponse(new OperationResponse(response.Code, response.Parameters) { DebugMessage = response.DebugMessage, ReturnCode = response.ReturnCode }, new SendParameters());
             }
         }
 

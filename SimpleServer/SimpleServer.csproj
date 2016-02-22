@@ -78,14 +78,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\MessageType.cs" />
+    <Compile Include="Data\Request\RequestCode.cs" />
+    <Compile Include="Data\Response\ResponseCode.cs" />
+    <Compile Include="Data\Response\ResponseDataType.cs" />
+    <Compile Include="Implementation\Handlers\ClientHandlerList.cs" />
     <Compile Include="Data\Event\EventType.cs" />
     <Compile Include="Data\Request\LoginRequestData.cs" />
-    <Compile Include="Data\Response\LoginResponseData.cs" />
-    <Compile Include="Data\OperationCode.cs" />
-    <Compile Include="Implementation\Handlers\Class1.cs" />
-    <Compile Include="Implementation\Handlers\DefaultMessageHandler.cs" />
-    <Compile Include="Implementation\Handlers\LoginMessageHandler.cs" />
-    <Compile Include="Implementation\Messages\DefaultMessage.cs" />
+    <Compile Include="Data\Response\message\LoginResponseMesage.cs" />
+    <Compile Include="Implementation\Handlers\Request\UserData.cs" />
+    <Compile Include="Implementation\Messages\EventMessage.cs" />
+    <Compile Include="Interfaces\IHandlerList.cs" />
+    <Compile Include="Interfaces\IHandler.cs" />
+    <Compile Include="Implementation\Messages\RequestMessage.cs" />
+    <Compile Include="Interfaces\IClientData.cs" />
+    <Compile Include="Interfaces\IClientPeer.cs" />
+    <Compile Include="Implementation\Handlers\ClientHandler.cs" />
+    <Compile Include="Implementation\Handlers\Request\DefaultRequestHandler.cs" />
+    <Compile Include="Implementation\Handlers\Request\LoginRequestHandler.cs" />
+    <Compile Include="Interfaces\IMessage.cs" />
+    <Compile Include="Implementation\Messages\ResponseMessage.cs" />
+    <Compile Include="Implementation\Handlers\Request\RegisterRequestHandler.cs" />
     <Compile Include="SimplePeer.cs" />
     <Compile Include="SimpleServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -98,12 +111,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SimpleServerCommon\SimpleServerCommon.csproj">
-      <Project>{7dac09fa-77c5-49ec-93f3-d1183f61be7a}</Project>
-      <Name>SimpleServerCommon</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

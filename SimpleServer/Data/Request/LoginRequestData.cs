@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-class LoginRequestData
+﻿class LoginRequestData
 {
     public enum LoginType { NORMAL }
     public const byte LOGIN_DATA_TYPE = 1;

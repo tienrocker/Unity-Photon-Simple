@@ -71,6 +71,9 @@ public class NetworkController : MonoBehaviour, IPhotonPeerListener
     public static event OnTcpRouterResponseOk onOnTcpRouterResponseOk;
     public static event OnTimeoutDisconnect onTimeoutDisconnect;
 
+    public delegate void _OnOperationResponse(OperationResponse operationResponse, IPhotonPeerListener peer);
+    public static event _OnOperationResponse onOperationResponse;
+
     public virtual void Awake()
     {
         Instance = this;
@@ -122,15 +125,7 @@ public class NetworkController : MonoBehaviour, IPhotonPeerListener
     public void OnOperationResponse(OperationResponse operationResponse)
     {
         DebugReturn(DebugLevel.INFO, String.Format("OnOperationResponse: {0}", operationResponse.ToStringFull()));
-
-        switch (operationResponse.OperationCode)
-        {
-            case OperationCode.GLOBAL_ACTION_LOGIN:
-                DebugReturn(DebugLevel.INFO, String.Format("Login: {0} {1}", operationResponse.Parameters[LoginResponseData.CODE], operationResponse.Parameters[LoginResponseData.MESSAGE]));
-                break;
-            default:
-                break;
-        }
+        if (onOperationResponse != null) onOperationResponse(operationResponse, this);
     }
 
     public void OnStatusChanged(StatusCode statusCode)
