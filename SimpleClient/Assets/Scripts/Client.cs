@@ -19,10 +19,15 @@ public class Client : MonoBehaviour
     #region Login
     public GameObject LoginPanel;
     public Button btnLogin;
-    public Text txtUsername;
-    public Text txtPassword;
+    public InputField txtUsername;
+    public InputField txtPassword;
 
     public UserData userData;
+    #endregion
+
+    #region Welcome
+    public GameObject WelcomePanel;
+    public Text WelcomeText;
     #endregion
 
     void Awake()
@@ -39,10 +44,13 @@ public class Client : MonoBehaviour
         NetworkController.onConnected += () =>
         {
             if (LoginPanel != null) LoginPanel.SetActive(true);
+            if (WelcomePanel != null) WelcomePanel.SetActive(false);
             if (btnReconnect != null) btnReconnect.gameObject.SetActive(false);
         };
         NetworkController.onDisconnected += () =>
         {
+            if (LoginPanel != null) LoginPanel.SetActive(true);
+            if (WelcomePanel != null) WelcomePanel.SetActive(false);
             if (btnReconnect != null) btnReconnect.gameObject.SetActive(true);
         };
 
@@ -54,14 +62,10 @@ public class Client : MonoBehaviour
     {
         NetworkController.Instance.DebugReturn(DebugLevel.INFO, String.Format("Login to system using username \"{0}\" and password \"{1}\"", txtUsername.text, txtPassword.text));
 
-        // send login message to server
-        NetworkController.onOperationResponse += (new LoginHandler().onOperationResponse); // assign response processer
-
-        Dictionary<byte, object> customOpParameters = new Dictionary<byte, object>();
-        customOpParameters.Add(LoginRequestData.LOGIN_DATA_TYPE, LoginRequestData.LoginType.NORMAL);
-        customOpParameters.Add(LoginRequestData.LOGIN_DATA_USERNAME, txtUsername.text);
-        customOpParameters.Add(LoginRequestData.LOGIN_DATA_PASSWORD, txtPassword.text);
-        NetworkController.Instance.Peer.OpCustom(RequestCode.GLOBAL_ACTION_LOGIN, customOpParameters, true);
+        if (txtUsername != null && txtPassword != null)
+        {
+            new LoginHandler().onRequest(txtUsername.text, txtPassword.text); // send login message to server
+        }
     }
 
     public void ReconnectClick()

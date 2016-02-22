@@ -1,7 +1,7 @@
 ﻿public class UserData
 {
     private int id;
-    private string name;
+    private string username;
     private string email;
     private string password;
     private string banned;
@@ -19,16 +19,16 @@
         }
     }
 
-    public string Name
+    public string Username
     {
         get
         {
-            return name;
+            return username;
         }
 
         set
         {
-            name = value;
+            username = value;
         }
     }
 
@@ -71,9 +71,10 @@
         }
     }
 
-    public UserData(int id, string name, string password, string email, string banned)
+    public UserData(int id, string username, string password, string email, string banned)
     {
         Id = id;
+        Username = username;
         Password = password;
         Email = email;
         Banned = banned;

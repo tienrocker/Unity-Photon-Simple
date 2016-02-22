@@ -2,5 +2,6 @@
 
 public interface IHandler
 {
-    void onOperationResponse(OperationResponse operationResponse, IPhotonPeerListener peer);
+    byte Code();
+    void onResponse(OperationResponse operationResponse, IPhotonPeerListener peer);
 }
